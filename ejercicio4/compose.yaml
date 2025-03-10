@@ -1,0 +1,30 @@
+services:
+  mi-mysql:
+    image: mysql
+    networks:
+      mi-mysql-red:
+        ipv4_address: 172.120.0.5
+    environment:
+      - MYSQL_ROOT_PASSWORD=toor
+    volumes:
+      - mi-mysql-volumen:/data/db
+  mi-dashboard:
+    image: phpmyadmin
+    networks:
+      mi-mysql-red:
+        ipv4_address: 172.120.0.15
+    environment:
+      - PMA_HOST=mi-mysql
+    ports:
+      - "8080:80"
+    depends_on:
+      - mi-mysql
+
+networks:
+  mi-mysql-red:
+    ipam:
+      config:
+        - subnet: "172.120.0.0/16"
+
+volumes:
+  mi-mysql-volumen:

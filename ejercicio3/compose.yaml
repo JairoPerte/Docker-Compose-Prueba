@@ -1,0 +1,35 @@
+services:
+  mi-mongo:
+    image: mongo
+    networks:
+      mi-mongo-red:
+        ipv4_address: 172.110.0.5
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin123
+    volumes:
+      - mi-mongo-volumen:/data/db
+  mi-mongo-express:
+    image: mongo-express
+    networks:
+      mi-mongo-red:
+        ipv4_address: 172.110.0.15
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=admin123
+      - ME_CONFIG_MONGODB_SERVER=mi-mongo
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=admin123
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mi-mongo
+
+networks:
+  mi-mongo-red:
+    ipam:
+      config:
+        - subnet: "172.110.0.0/16"
+
+volumes:
+  mi-mongo-volumen:
